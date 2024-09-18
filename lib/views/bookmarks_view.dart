@@ -165,7 +165,7 @@ class _BookmarksViewState extends State<BookmarksView>
                           gridDelegate:
                               SliverGridDelegateWithMaxCrossAxisExtent(
                             mainAxisExtent:
-                                HelperSize.isNearMinimumScreen(context)
+                                HelperSize.hasNearMinimumScreen(context)
                                     ? 75
                                     : 50,
                             maxCrossAxisExtent: 400,
@@ -201,9 +201,9 @@ class _BookmarksViewState extends State<BookmarksView>
                                 title: Padding(
                                   padding: const EdgeInsets.only(bottom: 8.0),
                                   child: Text(
-                                    "${pair.first}${HelperSize.isNearMinimumScreen(context) ? '\n' : ''}${HelperString.toTitleCase(pair.second)}",
+                                    "${pair.first}${HelperSize.hasNearMinimumScreen(context) ? '\n' : ''}${HelperString.toTitleCase(pair.second)}",
                                     softWrap:
-                                        HelperSize.isNearMinimumScreen(context),
+                                        HelperSize.hasNearMinimumScreen(context),
                                     semanticsLabel: pair.asPascalCase,
                                     style: const TextStyle(
                                       fontSize: 20,

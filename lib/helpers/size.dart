@@ -19,17 +19,32 @@ class HelperSize {
         viewPadding.right > 0;
   }
 
-  static bool isLessThanMinimumScreen(BuildContext context) {
+  static bool isInLandscapeMobileScreen(BuildContext context) {
+    return hasScreenSafeArea(context) &&
+        MediaQuery.of(context).orientation == Orientation.landscape;
+  }
+
+  static bool hasLessThanMinimumScreen(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+
+    if (isInLandscapeMobileScreen(context)) {
+      return screenSize.width < minScreenHeight ||
+          screenSize.height < minScreenWidth;
+    }
 
     return screenSize.width < minScreenWidth ||
         screenSize.height < minScreenHeight;
   }
 
-  static bool isNearMinimumScreen(BuildContext context) {
+  static bool hasNearMinimumScreen(BuildContext context) {
     const nearMinWidth = minScreenWidth + 100;
     const nearMinHeight = minScreenHeight + 100;
     final Size screenSize = MediaQuery.of(context).size;
+
+    if (isInLandscapeMobileScreen(context)) {
+      return screenSize.width <= nearMinHeight ||
+          screenSize.height <= nearMinWidth;
+    }
 
     return screenSize.width <= nearMinWidth ||
         screenSize.height <= nearMinHeight;

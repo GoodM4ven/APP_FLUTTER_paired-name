@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     // * Crash for less than minimum screens
-    if (HelperSize.isLessThanMinimumScreen(context)) {
+    if (HelperSize.hasLessThanMinimumScreen(context)) {
       return const LessThanMinimumScreensScaffoldWidget();
     }
 
