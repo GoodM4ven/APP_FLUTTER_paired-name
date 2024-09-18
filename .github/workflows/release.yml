@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [closed]
 
 permissions:
   contents: write
@@ -49,7 +47,7 @@ jobs:
       - name: Generate Changelog Content
         id: generate_changelog
         run: |
-          changelog=$(gh release view --json body -q .body || echo "No release notes available.")
+          changelog=$(gh release view --json body -q .body || echo "No release notes available." | tr -d '\r')
           echo "changelog=$changelog" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
