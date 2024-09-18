@@ -1,0 +1,26 @@
+package_rename_config:
+  android:
+    app_name: Paired Name App
+    package_name: dev.goodm4ven.paired_name_app
+    override_old_package: com.example.paired_name_app
+    lang: kotlin
+  ios:
+    app_name: Paired Name App
+    bundle_name: paired_name_app
+    package_name: dev.goodm4ven.paired_name_app
+  web:
+    app_name: Paired Name App
+    description: A paired-name generator app.
+  linux:
+    app_name: Paired Name App
+    package_name: dev.goodm4ven.paired_name_app
+    exe_name: paired_name_app-linux-x64
+  windows:
+    app_name: Paired Name App
+    organization: GoodM4ven
+    copyright_notice: Copyright ©️ 2024 GoodM4ven. All rights reserved.
+    exe_name: paired_name_app-win32
+  macos:
+    app_name: Paired Name App
+    package_name: dev.goodm4ven.paired_name_app
+    copyright_notice: Copyright ©️ 2024 GoodM4ven. All rights reserved.
