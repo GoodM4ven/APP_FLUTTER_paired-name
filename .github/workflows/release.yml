@@ -60,8 +60,8 @@ jobs:
         id: generate_changelog
         run: |
           echo "Generating changelog content..."
-          # Fetch the latest draft release notes
-          changelog=$(gh release view --json body -q .body --draft || echo "No release notes available.")
+          # Fetch the latest draft release notes using the GitHub API
+          changelog=$(gh api "repos/GoodM4ven/paired_name_app/releases" --jq '.[] | select(.draft==true) | .body' || echo "No release notes available.")
 
           # Check if the output is empty or malformed
           if [ -z "$changelog" ]; then
@@ -88,12 +88,12 @@ jobs:
             echo "CHANGELOG.md exists. Updating..."
           fi
 
-          # Add new version entry to CHANGELOG.md only if it doesn't already exist
+          # Prepend new version entry to CHANGELOG.md
           if ! grep -q "## \[v${{ env.current_version }}\]" CHANGELOG.md; then
-            echo "Adding new version entry to CHANGELOG.md for version v${{ env.current_version }}..."
-            echo "## [v${{ env.current_version }}] - $(date +'%Y-%m-%d')" >> CHANGELOG.md
-            echo "$changelog" >> CHANGELOG.md
-            echo "" >> CHANGELOG.md
+            echo "Prepending new version entry to CHANGELOG.md for version v${{ env.current_version }}..."
+            echo "## [v${{ env.current_version }}]" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+            echo "$changelog" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+            echo "" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
             echo "changes_exist=true" >> $GITHUB_ENV
           else
             echo "Version entry already exists in CHANGELOG.md. Skipping update."
