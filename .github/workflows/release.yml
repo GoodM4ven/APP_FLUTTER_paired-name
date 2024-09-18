@@ -15,18 +15,25 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install GitHub CLI
-        run: sudo apt-get install -y gh
+        run: |
+          echo "Installing GitHub CLI..."
+          sudo apt-get install -y gh
+          echo "GitHub CLI installed successfully."
 
       - name: Extract current version from pubspec.yaml
         id: extract_version
         run: |
+          echo "Extracting current version from pubspec.yaml..."
           current_version=$(grep '^version: ' pubspec.yaml | awk '{print $2}' | sed 's/+.*//')
+          echo "Current version extracted: $current_version"
           echo "current_version=$current_version" >> $GITHUB_ENV
 
       - name: Get latest release version from GitHub
         id: get_latest_release
         run: |
+          echo "Fetching latest release version from GitHub..."
           latest_version=$(gh release view --json tagName -q .tagName | sed 's/^v//')
+          echo "Latest release version fetched: $latest_version"
           echo "latest_version=$latest_version" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -34,8 +41,13 @@ jobs:
       - name: Check version difference
         if: env.current_version == env.latest_version
         run: |
-          echo "No version change detected. Exiting."
-          exit 0
+          echo "Checking version difference..."
+          if [ "$current_version" == "$latest_version" ]; then
+            echo "No version change detected. Exiting."
+            exit 0
+          else
+            echo "Version change detected. Proceeding with release."
+          fi
 
       - name: Draft Release with Release Drafter
         uses: release-drafter/release-drafter@v6
@@ -47,40 +59,57 @@ jobs:
       - name: Generate Changelog Content
         id: generate_changelog
         run: |
-          changelog=$(gh release view --json body -q .body || echo "No release notes available." | tr -d '\r')
-          echo "changelog=$changelog" >> $GITHUB_ENV
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "Generating changelog content..."
+          # Fetch the latest draft release notes
+          changelog=$(gh release view --json body -q .body --draft || echo "No release notes available.")
+
+          # Check if the output is empty or malformed
+          if [ -z "$changelog" ]; then
+            echo "No valid changelog data."
+            echo "changelog=No release notes available." >> $GITHUB_ENV
+          else
+            # Strip any invalid characters and write changelog to environment
+            changelog=$(echo "$changelog" | tr -d '\r')
+            echo "Changelog content: $changelog"
+            echo "changelog=$changelog" >> $GITHUB_ENV
+          fi
+          echo "Changelog generation completed."
 
       - name: Create or Update CHANGELOG.md
         id: update_changelog
         run: |
+          echo "Checking if CHANGELOG.md exists..."
           # Check if CHANGELOG.md exists; create it if not
           if [ ! -f CHANGELOG.md ]; then
             echo "CHANGELOG.md does not exist. Creating..."
             echo "# Changelog" > CHANGELOG.md
             echo "" >> CHANGELOG.md
+          else
+            echo "CHANGELOG.md exists. Updating..."
           fi
 
           # Add new version entry to CHANGELOG.md only if it doesn't already exist
           if ! grep -q "## \[v${{ env.current_version }}\]" CHANGELOG.md; then
+            echo "Adding new version entry to CHANGELOG.md for version v${{ env.current_version }}..."
             echo "## [v${{ env.current_version }}] - $(date +'%Y-%m-%d')" >> CHANGELOG.md
             echo "$changelog" >> CHANGELOG.md
             echo "" >> CHANGELOG.md
             echo "changes_exist=true" >> $GITHUB_ENV
           else
-            echo "Version entry already exists in CHANGELOG.md. Skipping..."
+            echo "Version entry already exists in CHANGELOG.md. Skipping update."
             echo "changes_exist=false" >> $GITHUB_ENV
           fi
 
       - name: Commit and Push Changelog
         if: env.changes_exist == 'true'
         run: |
+          echo "Committing and pushing changelog..."
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git pull origin main --rebase
           git add CHANGELOG.md
           git commit -m "Update CHANGELOG.md for version v${{ env.current_version }}"
           git push
+          echo "Changelog committed and pushed successfully."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
