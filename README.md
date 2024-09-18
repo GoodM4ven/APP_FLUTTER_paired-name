@@ -76,10 +76,6 @@ The `-dev` libraries of `libsecret` and `libjsoncpp` are needed.
 - // TODO better bookmark button animation
 - // TODO better recently generated list look
 
-### Changelogs
-
-You can check out the package's [CHANGELOG.md](./CHANGELOG.md) file.
-
 ### Progress
 
 You can also checkout the project's [roadmap](https://github.com/users/GoodM4ven/projects/4/).
