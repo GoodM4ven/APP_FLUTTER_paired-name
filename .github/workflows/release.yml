@@ -104,11 +104,25 @@ jobs:
         if: env.changes_exist == 'true'
         run: |
           echo "Committing and pushing changelog..."
+
+          # Configure Git user for GitHub Actions
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
+
+          # Stash any local changes to avoid conflicts
+          git stash --include-untracked
+
+          # Pull from the main branch with rebase
           git pull origin main --rebase
+
+          # Apply stashed changes back
+          git stash pop
+
+          # Stage and commit the updated CHANGELOG.md
           git add CHANGELOG.md
           git commit -m "Update CHANGELOG.md for version v${{ env.current_version }}"
+
+          # Push the changes
           git push
           echo "Changelog committed and pushed successfully."
         env:
