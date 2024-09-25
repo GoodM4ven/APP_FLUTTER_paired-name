@@ -27,6 +27,7 @@ It's nothing more than a development [training](https://codelabs.developers.goog
 1. Download from [Releases](https://github.com/username/repo-name/releases).
 2. Allow "installing from unknown sources" in system options.
 3. Install the app.
+4. Run the app!
 
 ### Linux
 
