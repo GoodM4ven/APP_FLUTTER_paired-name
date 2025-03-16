@@ -24,7 +24,7 @@ It's nothing more than a development [training](https://codelabs.developers.goog
 
 ### Android
 
-1. Download from [Releases](https://github.com/GoodM4ven/paired_name_app/releases).
+1. Download from [Releases](https://github.com/GoodM4ven/APP_FLUTTER_paired_name/releases).
 2. Allow "installing from unknown sources" in system options.
 3. Install the app.
 4. Run the app!
@@ -32,7 +32,7 @@ It's nothing more than a development [training](https://codelabs.developers.goog
 ### Linux
 
 1. Make sure the `libsecret` and `libjsoncpp` dependencies are installed.
-2. Download from [Releases](https://github.com/GoodM4ven/paired_name_app/releases).
+2. Download from [Releases](https://github.com/GoodM4ven/APP_FLUTTER_paired_name/releases).
 3. Execute `paired_name_app-linux-x64` to run the app.
 
 
